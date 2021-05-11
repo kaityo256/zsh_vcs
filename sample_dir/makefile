@@ -1,6 +1,9 @@
-DIRS=00 01 02 03 03_remote.git 04 04_remote.git
+DIRS=00 01 02 03 03_remote.git 04 04_remote.git 05 05_remote.git
 
 all:$(DIRS)
+
+%_remote.git:
+	git init --bare $@
 
 00:
 	git init 00;cd 00;\
@@ -16,12 +19,6 @@ all:$(DIRS)
 	touch test.txt;\
 	git add test.txt;\
 	git commit -m "initial commit"
-
-03_remote.git:
-	git init --bare 03_remote.git
-
-04_remote.git:
-	git init --bare 04_remote.git
 
 03: 03_remote.git
 	git init 03;cd 03;\
@@ -39,11 +36,21 @@ all:$(DIRS)
 	git commit -m "initial commit";\
 	git branch -M main;\
 	git remote add origin ../04_remote.git;\
-	git push -u origin main
+	git push -u origin main;\
 	touch test2.txt;\
 	git add test2.txt;\
 	git commit -m "adds file";\
 
+05: 05_remote.git
+	git init 05;cd 05;\
+	touch test.txt;\
+	git add test.txt;\
+	git commit -m "initial commit";\
+	git branch -M main;\
+	git remote add origin ../05_remote.git;\
+	git push -u origin main;\
+	touch test2.txt;\
+	git add test2.txt;\
 
 .PHONY: clean
 

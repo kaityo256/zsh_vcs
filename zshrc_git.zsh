@@ -8,11 +8,11 @@ function git-prompt {
 	fi
   st=`git status 2> /dev/null`
   if [[ -n `echo "$st" | grep "^nothing to"` ]]; then
-		branch="${fg[green]}($branchname)$reset_color"
+		branch="%{${fg[green]}%}($branchname)%{$reset_color%}"
   elif [[ -n `echo "$st" | grep "^nothing added"` ]]; then
-		branch="${fg[yellow]}($branchname)$reset_color"
+		branch="%{${fg[yellow]}%}($branchname)%{$reset_color%}"
 	else
-		branch="${fg[red]}($branchname)$reset_color"
+		branch="%{${fg[red]}%}($branchname)%{$reset_color%}"
 	fi
 
 	remote=`git config branch.${branchname}.remote 2> /dev/null`
@@ -22,13 +22,14 @@ function git-prompt {
 	else
 		upstream="${remote}/${branchname}"
 		if [[ -z `git log ${upstream}..${branchname}` ]]; then
-			pushed="${fg[green]}[up]$reset_color"
+			pushed="%{${fg[green]}%}[up]%{$reset_color%}"
 		else
-			pushed="${fg[red]}[up]$reset_color"
+			pushed="%{${fg[red]}%}[up]%{$reset_color%}"
 		fi
 	fi
 
   echo "$branch$pushed"
 }
 
-git-prompt
+RPROMPT='`git-prompt`%{$fg_bold[cyan]%}[%~]%{$reset_color%}'
+setopt prompt_subst
