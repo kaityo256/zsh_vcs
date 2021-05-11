@@ -1,7 +1,7 @@
 autoload -U colors; colors
 
 function git-prompt {
-  local branchname branch st
+  local branchname branch st remote pushed upstream
 	branchname=`git symbolic-ref --short HEAD 2> /dev/null`
 	if [ -z $branchname ]; then
 		return
@@ -15,7 +15,20 @@ function git-prompt {
 		branch="${fg[red]}($branchname)$reset_color"
 	fi
 
-  echo "${fg[green]}${branch}${reset_color}"
+	remote=`git config branch.${branchname}.remote 2> /dev/null`
+
+	if [ -z $remote ]; then
+		pushed=''
+	else
+		upstream="${remote}/${branchname}"
+		if [[ -z `git log ${upstream}..${branchname}` ]]; then
+			pushed="${fg[green]}[up]$reset_color"
+		else
+			pushed="${fg[red]}[up]$reset_color"
+		fi
+	fi
+
+  echo "$branch$pushed"
 }
 
 git-prompt
